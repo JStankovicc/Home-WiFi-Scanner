@@ -1,16 +1,14 @@
 package com.homeservices.WiFiScanner.thread;
 
-import com.homeservices.WiFiScanner.PingUtil;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public class CheckPINGThread extends Thread{
+public class PINGThread extends Thread{
 
     private int id;
 
-    public CheckPINGThread(final int id){
+    public PINGThread(final int id){
         this.id = id;
     }
 
@@ -18,17 +16,14 @@ public class CheckPINGThread extends Thread{
     public void run(){
         String ipAddress = "192.168.1." + id;
         try {
-            InetAddress inet = InetAddress.getByName(ipAddress);
-
-            if (inet.isReachable(1000)) {
-                PingUtil.pingResponseMap.put(id,true);
+            InetAddress inetAddress = InetAddress.getByName(ipAddress);
+            if (inetAddress.isReachable(1000)) {
+                System.out.println(ipAddress + " se odaziva na ping.");
             }
-
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 }
