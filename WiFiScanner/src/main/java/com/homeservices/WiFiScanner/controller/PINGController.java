@@ -14,7 +14,7 @@ public class PINGController {
     private PINGService pingService;
 
     @GetMapping("/getAll")
-    public void getAll() throws InterruptedException {
+    public void getAll(){
         pingService.scan();
     }
 }

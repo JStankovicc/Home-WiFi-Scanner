@@ -18,7 +18,7 @@ public class PINGThread extends Thread{
         try {
             InetAddress inetAddress = InetAddress.getByName(ipAddress);
             if (inetAddress.isReachable(1000)) {
-                System.out.println(ipAddress + " se odaziva na ping.");
+                System.out.println(ipAddress + " je tu");
             }
         } catch (UnknownHostException e) {
             e.printStackTrace();
