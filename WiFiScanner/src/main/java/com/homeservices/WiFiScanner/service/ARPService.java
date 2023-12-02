@@ -8,10 +8,6 @@ import java.io.InputStreamReader;
 @Service
 public class ARPService {
 
-    public void testMethod(){
-        System.out.println("RADI");
-    }
-
     public void scan(){
         try {
             Process process = Runtime.getRuntime().exec("arp -a");
