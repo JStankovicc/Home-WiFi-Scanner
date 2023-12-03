@@ -1,15 +1,14 @@
 package com.homeservices.WiFiScanner.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class NetworkUser {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
-
+    @Column(unique = true)
     private String macAddress;
 
     public void setId(Long id) {

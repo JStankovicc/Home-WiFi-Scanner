@@ -1,17 +1,23 @@
-package com.homeservices.WiFiScanner.model;
+package com.homeservices.WiFiScanner.model.dto;
 
-public class ARPContainer {
+public class NetworkUserDto {
 
+    private String name;
     private String ip;
     private String mac;
 
-    public ARPContainer(String ip, String mac){
+    public NetworkUserDto(String name, String ip, String mac) {
+        this.name = name;
         this.ip = ip;
         this.mac = mac;
     }
 
-    public void printInfo(){
-        System.out.println("IP: " + this.ip + "  MAC:  " + this.mac);
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getIp() {

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NetworkUserRepository extends JpaRepository<NetworkUser, Long> {
+    NetworkUser findByMacAddress(String macAddress);
 }

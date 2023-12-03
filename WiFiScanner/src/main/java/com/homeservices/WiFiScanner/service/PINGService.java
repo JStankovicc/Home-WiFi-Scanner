@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public class PINGService {
 
     public void scan() {
-        for(int i = 2; i < 255; i++){
+        for(int i = 1; i < 255; i++){
             PINGThread pingThread = new PINGThread(i);
             pingThread.start();
         }
