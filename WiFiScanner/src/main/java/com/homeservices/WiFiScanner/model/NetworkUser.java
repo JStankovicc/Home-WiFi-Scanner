@@ -3,12 +3,14 @@ package com.homeservices.WiFiScanner.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "network_user")
 public class NetworkUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "name")
     private String name;
-    @Column(unique = true)
+    @Column(unique = true, name = "mac_address")
     private String macAddress;
 
     public void setId(Long id) {

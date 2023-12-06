@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 import java.util.ArrayList;
@@ -20,6 +21,9 @@ public class ARPService {
 
     @Autowired
     private NetworkUserService networkUserService;
+
+    private static final int SLEEP_DURATION_PING = 2000;
+    private static final int SLEEP_DURATION_CLEAR = 1000;
 
 
     public List<NetworkUserDto> getAllUsers(){
@@ -45,32 +49,74 @@ public class ARPService {
 
 
     public List<ARPContainer> scan() {
-        pingService.scan();
+
+        clearArpTable();
+
         List<ARPContainer> arpList = new ArrayList<>();
+
         try {
-            Thread.sleep(1200);
+            Thread.sleep(SLEEP_DURATION_CLEAR);
+            pingService.scan();
+            Thread.sleep(SLEEP_DURATION_PING);
 
             Process process = Runtime.getRuntime().exec("arp -a");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith("Interface") || line.trim().isEmpty()) {
-                    continue;
-                }
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (shouldSkipLine(line)) {
+                        continue;
+                    }
 
-                String[] parts = line.split("\\s+");
-                if (parts.length >= 3 && parts[3].equals("dynamic")) {
-                    arpList.add(new ARPContainer(parts[1],parts[2]));
+                    String[] parts = line.split("\\s+");
+                    if (isDynamic(parts)) {
+                        arpList.add(new ARPContainer(parts[1], parts[2]));
+                    }
                 }
             }
-
-            reader.close();
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                System.err.println("Neka greška se dogodila prilikom izvršavanja 'arp -a' komande. Kod izlaza: " + exitCode);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return arpList;
     }
 
+    public void clearArpTable() {
+        try {
+            String os = System.getProperty("os.name").toLowerCase();
+
+            if (os.contains("win")) {
+                ProcessBuilder processBuilder = new ProcessBuilder("cmd", "/c", "arp -d");
+                Process process = processBuilder.start();
+                int exitCode = process.waitFor();
+                if (exitCode != 0) {
+                    System.err.println("Neka greška se dogodila prilikom izvršavanja 'arp -d'.");
+                }
+            } else if (os.contains("nix") || os.contains("nux") || os.contains("mac")) {
+                ProcessBuilder processBuilder = new ProcessBuilder("sudo", "arp", "-d", "-a");
+                Process process = processBuilder.start();
+                int exitCode = process.waitFor();
+                if (exitCode != 0) {
+                    System.err.println("Neka greška se dogodila prilikom izvršavanja 'sudo arp -d -a'.");
+                }
+            } else {
+                System.err.println("Operativni sistem nije podržan za brisanje ARP tabele.");
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean shouldSkipLine(String line) {
+        return line.startsWith("Interface") || line.trim().isEmpty();
+    }
+
+    private boolean isDynamic(String[] parts) {
+        return parts.length >= 3 && "dynamic".equals(parts[3]);
+    }
 }

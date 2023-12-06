@@ -3,6 +3,7 @@ package com.homeservices.WiFiScanner.service;
 import com.homeservices.WiFiScanner.model.ARPContainer;
 import com.homeservices.WiFiScanner.model.NetworkUser;
 import com.homeservices.WiFiScanner.repository.NetworkUserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,5 +24,10 @@ public class NetworkUserService {
 
             return networkUserRepository.save(newUser);
         }
+    }
+
+    @Transactional
+    public void changeName(String name, String mac) {
+        networkUserRepository.changeNameByMac(name,mac);
     }
 }

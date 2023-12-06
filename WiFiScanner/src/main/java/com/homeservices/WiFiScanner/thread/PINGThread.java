@@ -17,8 +17,11 @@ public class PINGThread extends Thread{
         String ipAddress = "192.168.1." + id;
         try {
             InetAddress inetAddress = InetAddress.getByName(ipAddress);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
+            if( inetAddress.isReachable(1000)){
+                //System.out.println(ipAddress + " je na mrezi.");
+            }
+        }catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
