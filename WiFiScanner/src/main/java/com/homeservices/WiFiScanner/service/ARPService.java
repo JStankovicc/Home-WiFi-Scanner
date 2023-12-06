@@ -59,7 +59,15 @@ public class ARPService {
             pingService.scan();
             Thread.sleep(SLEEP_DURATION_PING);
 
-            Process process = Runtime.getRuntime().exec("arp -a");
+            String os = System.getProperty("os.name").toLowerCase();
+            ProcessBuilder processBuilder;
+            if(os.contains("win")){
+                processBuilder = new ProcessBuilder("cmd", "/c", "arp -a");
+            }else {
+                processBuilder = new ProcessBuilder("sudo", "arp", "-a");
+            }
+
+            Process process = processBuilder.start();
 
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String line;
@@ -85,7 +93,6 @@ public class ARPService {
 
         return arpList;
     }
-
     public void clearArpTable() {
         try {
             String os = System.getProperty("os.name").toLowerCase();
