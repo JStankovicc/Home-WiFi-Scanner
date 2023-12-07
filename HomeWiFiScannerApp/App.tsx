@@ -138,7 +138,6 @@ const App = () => {
         <View style={styles.container}>
             {!isLoggedIn ? (
                 <View style={styles.loginContainer}>
-                    <Text>Login</Text>
                     <TextInput
                         style={styles.input}
                         placeholder="Username"

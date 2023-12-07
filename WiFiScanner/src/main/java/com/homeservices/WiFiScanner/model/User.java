@@ -1,6 +1,10 @@
 package com.homeservices.WiFiScanner.model;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Collections;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -40,5 +44,9 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<SimpleGrantedAuthority> getAuthorities() {
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
     }
 }

@@ -1,7 +1,12 @@
 package com.homeservices.WiFiScanner.controller;
 
+import com.homeservices.WiFiScanner.model.dto.AuthRequestDto;
+import com.homeservices.WiFiScanner.model.dto.AuthResponseDto;
+import com.homeservices.WiFiScanner.service.AuthenticationService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,14 +15,14 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
 
-    @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login() {
-        Map<String, String> response = new HashMap<>();
-        String hardcodedJwt = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrb3Jpc3VuaWQxMjMiLCJpYXQiOjE2MTAwMDAwMDAsImV4cCI6MTYxMDA5NjAwMH0.4KUXB2C5TBgEGdpfgBpJtsfKYXKF6LReV2ZYRmMKZvU";
+    private final AuthenticationService authenticationService;
 
-        response.put("token", hardcodedJwt);
-        return ResponseEntity.ok(response);
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponseDto> login(@RequestBody AuthRequestDto request) {
+        System.out.println(request.getUsername() + "  " + request.getPassword());
+        return ResponseEntity.ok(authenticationService.signin(request));
     }
 }
