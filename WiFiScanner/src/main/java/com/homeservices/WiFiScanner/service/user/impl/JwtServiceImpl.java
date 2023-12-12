@@ -1,5 +1,6 @@
-package com.homeservices.WiFiScanner.util;
+package com.homeservices.WiFiScanner.service.user.impl;
 
+import com.homeservices.WiFiScanner.service.user.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -16,19 +17,20 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
-public class JwtService{
-
+public class JwtServiceImpl implements JwtService {
     @Value("${token.signing.key}")
     private String jwtSigningKey;
-
+    @Override
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
+    @Override
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
+    @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
         return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);

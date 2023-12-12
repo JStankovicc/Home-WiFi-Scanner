@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 });
 
 const App = () => {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [jwtToken, setJwtToken] = useState('');
     const [arpList, setArpList] = useState([]);
@@ -58,12 +58,12 @@ const App = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await fetch('http://192.168.1.30:8080/user/login', {
+            const response = await fetch('http://192.168.1.30:8080/auth/signin', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username, password }),
+                body: JSON.stringify({ email, password }),
             });
 
             console.log('Login response status:', response.status);
@@ -140,9 +140,9 @@ const App = () => {
                 <View style={styles.loginContainer}>
                     <TextInput
                         style={styles.input}
-                        placeholder="Username"
-                        value={username}
-                        onChangeText={text => setUsername(text)}
+                        placeholder="Email"
+                        value={email}
+                        onChangeText={text => setEmail(text)}
                     />
                     <TextInput
                         style={styles.input}
